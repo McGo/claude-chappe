@@ -1,0 +1,47 @@
+<idea-plugin>
+    <id>de.mirkohaaser.claude-chappe</id>
+    <name>Claude Chappe</name>
+    <vendor email="kontakt@mirko-haaser.de" url="https://mirko-haaser.de">Mirko Haaser</vendor>
+
+    <description><![CDATA[
+        <p>Colours each project window by the state of the Claude Code sessions running in its
+        terminals, so a stack of open windows tells you at a glance which one needs you.</p>
+
+        <ul>
+            <li><b>Green</b> &mdash; at least one session is processing.</li>
+            <li><b>Red</b> &mdash; a session is waiting for a decision, or has finished its turn.</li>
+            <li><b>Untouched</b> &mdash; nothing running.</li>
+        </ul>
+
+        <p>The window gets a coloured border and, optionally, a tinted status bar &mdash; the part
+        that usually stays visible when windows overlap. A <i>Cascade Project Windows</i> action in
+        the Window menu stacks every open project on one screen and puts the most urgent one in
+        front.</p>
+
+        <p>State comes from Claude Code hooks, not from scraping terminal output. The hook script
+        and its installer ship with the plugin repository.</p>
+
+        <p>Named after Claude Chappe, who built the optical telegraph in 1792: status carried over
+        distance by nothing but what you can see from far away.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="de.mirkohaaser.claudechappe.ChappeStartup"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="de.mirkohaaser.claudechappe.ChappeConfigurable"
+            id="de.mirkohaaser.claudechappe.settings"
+            displayName="Claude Chappe"/>
+    </extensions>
+
+    <actions>
+        <action id="ClaudeChappe.CascadeWindows"
+                class="de.mirkohaaser.claudechappe.CascadeWindowsAction"
+                text="Cascade Project Windows"
+                description="Stack all open project windows on one screen, most urgent in front">
+            <add-to-group group-id="WindowMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
