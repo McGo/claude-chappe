@@ -1,3 +1,5 @@
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+
 plugins {
     id("java")
     alias(libs.plugins.kotlin)
@@ -33,7 +35,14 @@ intellijPlatform {
         }
     }
     pluginVerification {
-        ides { recommended() }
+        ides {
+            // Lower bound of the supported range.
+            create(IntelliJPlatformType.IntellijIdeaCommunity, "2025.1")
+            // Optionally an IDE installed on this machine - see gradle.properties.
+            providers.gradleProperty("verifyAgainstLocalIde").orNull
+                ?.takeIf { file(it).isDirectory }
+                ?.let(::local)
+        }
     }
 }
 
