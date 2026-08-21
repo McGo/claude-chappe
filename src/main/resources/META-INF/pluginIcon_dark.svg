@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+  <!-- Chappe's optical telegraph: mast, regulator, two indicator arms. -->
+  <g stroke-linecap="round" fill="none">
+    <path d="M20 14v21" stroke="#C9CCD1" stroke-width="4"/>
+    <path d="M13 35h14" stroke="#C9CCD1" stroke-width="4"/>
+    <path d="M8 14h24" stroke="#C9CCD1" stroke-width="5"/>
+    <path d="M8 14V4" stroke="#3FB950" stroke-width="5"/>
+    <path d="M32 14v10" stroke="#F85149" stroke-width="5"/>
+  </g>
+</svg>

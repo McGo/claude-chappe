@@ -152,6 +152,19 @@ Gradle fetches its own JDK 21 toolchain, so no local JDK setup is needed beyond 
 Gradle itself. `verifyPlugin` checks against the lower bound of the supported range; point
 `verifyAgainstLocalIde` at an installed IDE in `~/.gradle/gradle.properties` to add a second target.
 
+## Releasing
+
+1. Set `pluginVersion` in `gradle.properties` and move the entries under `## [Unreleased]` in
+   [CHANGELOG.md](CHANGELOG.md) into a dated section for that version. The build reads that section
+   and writes it into the plugin as the change notes, which is what the Marketplace shows under
+   *What's new*.
+2. `./gradlew buildPlugin verifyPlugin`
+3. The first upload of a new plugin goes through the web form at
+   [plugins.jetbrains.com/plugin/add](https://plugins.jetbrains.com/plugin/add), where JetBrains
+   reviews it before it becomes visible.
+4. Every release after that: `PUBLISH_TOKEN=… ./gradlew publishPlugin`, with a token from
+   [your Marketplace profile](https://plugins.jetbrains.com/author/me/tokens).
+
 ## Contributing
 
 Bug reports and pull requests are welcome at
