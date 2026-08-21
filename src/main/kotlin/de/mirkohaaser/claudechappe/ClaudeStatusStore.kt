@@ -9,6 +9,8 @@ import com.intellij.util.concurrency.AppExecutorUtil
 import com.intellij.util.messages.Topic
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
@@ -122,9 +124,22 @@ class ClaudeStatusStore : Disposable {
         }
     }
 
+    /**
+     * Resolved paths, keyed by what was handed in. Resolving touches the file
+     * system, and both sides of the comparison are asked for on every poll.
+     */
+    private val resolved = ConcurrentHashMap<String, String>()
+
     private fun normalize(path: String?): String? {
         if (path.isNullOrBlank()) return null
-        var p = path.replace('\\', '/').trimEnd('/')
+        // The IDE reports a project path with symlinks resolved, the hook writes
+        // the working directory as the shell saw it. Comparing them as they come
+        // leaves a project opened through a link without any colour.
+        val real = resolved[path]
+            ?: runCatching { Paths.get(path).toRealPath().toString() }.getOrNull()
+                ?.also { resolved[path] = it }
+            ?: path
+        var p = real.replace('\\', '/').trimEnd('/')
         if (p.isEmpty()) p = "/"
         return if (ChappeSettings.pathsAreCaseInsensitive) p.lowercase() else p
     }

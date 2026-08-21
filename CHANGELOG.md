@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+- A project opened through a symlink stayed uncoloured. The IDE reports the
+  project path with symlinks resolved, while the hook writes the working
+  directory as the shell saw it — on macOS, `/tmp` against `/private/tmp` is
+  enough to break the match. Both sides are now resolved before comparing.
+
 ## [0.1.0] - 2026-08-21
 
 First release.
