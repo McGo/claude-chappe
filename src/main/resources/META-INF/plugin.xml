@@ -22,7 +22,8 @@
         and its installer ship with the plugin repository.</p>
 
         <p>Named after Claude Chappe, who built the optical telegraph in 1792: status carried over
-        distance by nothing but what you can see from far away.</p>
+        distance by nothing but what you can see from far away. An independent plugin, not
+        affiliated with Anthropic.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
