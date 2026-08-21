@@ -65,11 +65,22 @@ class ChappeConfigurable : BoundConfigurable("Claude Chappe") {
         }
 
         group("Cascade") {
+            row("Window width:") {
+                intTextField(0..20_000).bindIntText(state::cascadeWidth).columns(6)
+            }
+            row("Window height:") {
+                intTextField(0..20_000).bindIntText(state::cascadeHeight).columns(6)
+                    .comment(
+                        "Pixels each window is resized to. 0 uses everything the screen has left " +
+                            "once the offsets are spent. A size larger than that is capped.",
+                    )
+            }
             row("Horizontal offset:") {
                 intTextField(0..400).bindIntText(state::cascadeOffsetX).columns(4)
             }
             row("Vertical offset:") {
                 intTextField(0..400).bindIntText(state::cascadeOffsetY).columns(4)
+                    .comment("Step between two windows. The stack sits top aligned and centred horizontally.")
             }
             row {
                 checkBox("Most urgent window to the front")

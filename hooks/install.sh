@@ -2,7 +2,7 @@
 #
 # Installs the Claude Chappe status hooks into ~/.claude/settings.json.
 #
-# Copies claude-chappe.sh to ~/.claude/hooks/ and registers it for the five
+# Copies claude-chappe.sh to ~/.claude/hooks/ and registers it for the six
 # events the plugin needs. Hooks belonging to other tools are left alone;
 # earlier Chappe entries are replaced rather than duplicated.
 #
@@ -66,6 +66,7 @@ def entry(\$state):
 (((.hooks // {}) | prune_chappe)
   | .SessionStart     = ((.SessionStart // [])     + [entry(\"idle\")])
   | .UserPromptSubmit = ((.UserPromptSubmit // []) + [entry(\"working\")])
+  | .PostToolUse      = ((.PostToolUse // [])      + [entry(\"working\")])
   | .Notification     = ((.Notification // [])     + [entry(\"waiting\")])
   | .Stop             = ((.Stop // [])             + [entry(\"idle\")])
   | .SessionEnd       = ((.SessionEnd // [])       + [entry(\"clear\")])
@@ -73,7 +74,7 @@ def entry(\$state):
 | .hooks = \$hooks"
 
 echo "Installed $target"
-echo "Registered hooks: SessionStart, UserPromptSubmit, Notification, Stop, SessionEnd"
+echo "Registered hooks: SessionStart, UserPromptSubmit, PostToolUse, Notification, Stop, SessionEnd"
 echo "Backup: $backup"
 echo
 echo "Restart running Claude Code sessions to pick the hooks up."

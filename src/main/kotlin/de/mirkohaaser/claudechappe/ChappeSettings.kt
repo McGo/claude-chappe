@@ -42,8 +42,12 @@ class ChappeSettings : PersistentStateComponent<ChappeSettings.State> {
          */
         var clearAttentionOnFocus: Boolean = true,
 
-        var cascadeOffsetX: Int = 34,
-        var cascadeOffsetY: Int = 34,
+        var cascadeOffsetX: Int = 210,
+        var cascadeOffsetY: Int = 45,
+
+        /** Size every window is set to. 0 means as large as the screen allows. */
+        var cascadeWidth: Int = 2150,
+        var cascadeHeight: Int = 740,
         /** Cascade puts the most urgent window in front instead of keeping IDE order. */
         var cascadeSortsByState: Boolean = true,
     )

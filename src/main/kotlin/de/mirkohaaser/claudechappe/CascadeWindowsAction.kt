@@ -16,6 +16,10 @@ import javax.swing.JFrame
 /**
  * Stacks every open project window into a cascade on one screen.
  *
+ * The stack sits flush with the top of the screen and is centred horizontally,
+ * so it stays where you expect it on a wide screen instead of clinging to the
+ * left edge.
+ *
  * All project windows of one IDE live in the same process, so the plugin can
  * reach and place them directly - no accessibility permissions, no window
  * manager scripting.
@@ -50,23 +54,34 @@ class CascadeWindowsAction : AnAction() {
         val offsetY = settings.state.cascadeOffsetY.coerceIn(0, 400)
         val steps = ordered.size - 1
 
-        val width = (screen.width - steps * offsetX).coerceAtLeast(minimumSize.width)
-        val height = (screen.height - steps * offsetY).coerceAtLeast(minimumSize.height)
+        // What the screen still has room for once the offsets are spent - the
+        // ceiling for the configured size, and the size itself when that is 0.
+        val fitWidth = (screen.width - steps * offsetX).coerceAtLeast(minimumSize.width)
+        val fitHeight = (screen.height - steps * offsetY).coerceAtLeast(minimumSize.height)
+        val width = settings.state.cascadeWidth
+            .takeIf { it > 0 }?.coerceIn(minimumSize.width, fitWidth) ?: fitWidth
+        val height = settings.state.cascadeHeight
+            .takeIf { it > 0 }?.coerceIn(minimumSize.height, fitHeight) ?: fitHeight
+
+        // Place the stack as a whole: centred horizontally, top aligned.
+        val stackWidth = width + steps * offsetX
+        val originX = screen.x + ((screen.width - stackWidth) / 2).coerceAtLeast(0)
+        val originY = screen.y
 
         ordered.forEachIndexed { index, (_, frame) ->
             if (frame.extendedState and Frame.ICONIFIED != 0) frame.extendedState = Frame.NORMAL
             // MAXIMIZED windows ignore setBounds until the state is cleared.
             if (frame.extendedState and Frame.MAXIMIZED_BOTH != 0) frame.extendedState = Frame.NORMAL
             frame.setBounds(
-                screen.x + index * offsetX,
-                screen.y + index * offsetY,
+                originX + index * offsetX,
+                originY + index * offsetY,
                 width,
                 height,
             )
         }
 
         // Raise back to front: the least urgent window first, so the most
-        // urgent one ends up on top and fully visible in the upper left.
+        // urgent one ends up on top and fully visible.
         ordered.asReversed().forEach { (_, frame) -> frame.toFront() }
         ordered.firstOrNull()?.second?.requestFocus()
     }
